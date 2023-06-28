@@ -1,0 +1,134 @@
+openapi: 3.0.0
+info:
+  title: OTP Service API
+  version: 1.0.0
+  description: API specification for OTP generation and validation microservice.
+
+paths:
+  /otp/generate:
+    post:
+      summary: Generate a new OTP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestId:
+                  type: string
+                  format: uuid
+                  description: User identifier
+                otpTemplateId:
+                  type: string
+                  description: template id of the OTP to be generated
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  otp:
+                    type: string
+                    format: password
+                    description: The generated OTP
+                  expirationTime:
+                    type: string
+                    format: date-time
+        '400' :
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fieldName: 
+                    type: string
+                    description: field containing the error
+                  message: 
+                    type: string
+                    description: error message related to the field
+        '429' :
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    description: An error message explaining the wait time to the end user
+
+
+  /otp/validate:
+    post:
+      summary: Validate an OTP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                requestId:
+                  type: string
+                  description: Request identifier
+                otp:
+                  type: string
+                  description: The OTP to be validated
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid OTP
+        '404':
+          description: OTP not found or expired
+
+  /config:
+    get:
+      summary: Retrieve OTP service configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  otpLength:
+                    type: integer
+                    description: Length of the OTP
+                  expirationTime:
+                    type: string
+                    format: date-time
+                    description: Expiration time in seconds
+                  validCharSet:
+                    type: string
+
+    put:
+      summary: Update OTP service configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otpLength:
+                  type: integer
+                  description: Length of the OTP (optional)
+                expirationTime:
+                  type: integer
+                  description: Expiration time in seconds (optional)
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid request
+
+  /health:
+    get:
+      summary: Check the health of the OTP service
+      responses:
+        '200':
+          description: Service is healthy
+
