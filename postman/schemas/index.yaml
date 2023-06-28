@@ -93,17 +93,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  otpLength:
-                    type: integer
-                    description: Length of the OTP
-                  expirationTime:
-                    type: string
-                    format: date-time
-                    description: Expiration time in seconds
-                  validCharSet:
-                    type: string
+                type: array
+                description: list of all available templates
+                items: 
+                  type: object
+                  properties:
+                    templateName:
+                      type: string
+                    otpLength:
+                      type: integer
+                      description: Length of the OTP
+                    validityDuration:
+                      type: integer
+                      description: Expiration time in seconds
+                    validCharSet:
+                      type: string
 
     put:
       summary: Update OTP service configuration
