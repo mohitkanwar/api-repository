@@ -117,12 +117,18 @@ paths:
             schema:
               type: object
               properties:
+                templateName:
+                  type: string
+                  description : name of the template. (identifier)
                 otpLength:
                   type: integer
-                  description: Length of the OTP (optional)
-                expirationTime:
+                  description: Length of the OTP
+                validityDuration:
                   type: integer
-                  description: Expiration time in seconds (optional)
+                  description: Expiration time in seconds
+                validCharSet:
+                  type: string    
+                  description: all valid characters that should be chosen while creating the OTP  
       responses:
         '200':
           description: Successful operation
